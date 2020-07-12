@@ -66,6 +66,8 @@ def create_app(test_config=None):
         start = (page - 1) * 10
         end = start + 10
         questions = [q.format() for q in Question.query.order_by(Question.id).all()]
+        if len(questions[start:end]) == 0:
+            abort(404)
         current_q = questions[-1]
         response = {
             "questions": questions[start:end],
@@ -105,22 +107,24 @@ def create_app(test_config=None):
 
     @app.route("/questions/add", methods=['POST'])
     def create_q():
-        q = Question(
+        try:
+            q = Question(
             question=request.json['question'],
             answer=request.json['answer'],
             category=request.json['category'],
             difficulty=request.json['difficulty']
         )
 
-        q.insert()
+            q.insert()
 
-        questions = Question.query.order_by(Question.id).all()
-        return jsonify(
-            {
-                "question": questions[-1].format(),
-            }
-        )
-
+            questions = Question.query.order_by(Question.id).all()
+            return jsonify(
+                {
+                    "question": questions[-1].format(),
+                }
+            )
+        except:
+            abort(400)
     '''
   @TODO: 
   Create a POST endpoint to get questions based on a search term. 
@@ -197,25 +201,27 @@ def create_app(test_config=None):
 
     @app.route("/quizzes", methods=["POST"])
     def quiz():
-        category = request.json['quiz_category']
-        previous = request.json['previous_questions']
-        if category['id'] != 0:
-            questions = Question.query.filter(Question.id.notin_(previous)).filter(
-                Question.category == category['id']).all()
-        else:
-            questions = Question.query.filter(Question.id.notin_(previous)).all()
-        if len(questions) > 0:
+        try:
+            category = request.json['quiz_category']
+            previous = request.json['previous_questions']
+            if category['id'] != 0:
+                questions = Question.query.filter(Question.id.notin_(previous)).filter(
+                    Question.category == category['id']).all()
+            else:
+                questions = Question.query.filter(Question.id.notin_(previous)).all()
+            if len(questions) > 0:
+                return jsonify(
+                    {
+                        "question": questions[random.randint(1, len(questions)) - 1].format()
+                    }
+                )
             return jsonify(
                 {
-                    "question": questions[random.randint(1, len(questions)) - 1].format()
+                    "question": False
                 }
             )
-        return jsonify(
-            {
-                "question": False
-            }
-        )
-
+        except:
+            abort(400)
     '''
   @TODO: 
   Create error handlers for all expected errors 
