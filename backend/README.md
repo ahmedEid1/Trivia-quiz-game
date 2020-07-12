@@ -72,9 +72,7 @@ This README is missing documentation of your endpoints. Below is an example for 
 
 Endpoints
 GET '/categories'
-GET ...
-POST ...
-DELETE ...
+
 
 GET '/categories'
 - Fetches a dictionary of categories in which the keys are the ids and the value is the corresponding string of the category
@@ -89,7 +87,59 @@ GET '/categories'
 
 ```
 
+GET '/questions'
+- return a list of questions, 
+  number of total questions, current category, categories
+- Request Arguments: None
+- Return: An object with the keys ["questions","total_questions","current_category","categories"]
+{"categories":{"1":"Science","2":"Art","3":"Geography","4":"History","5":"Entertainment","6":"Sports"},
+    "current_category":{"id":6,"type":"Sports"},
+    "questions":[{"answer":"Brazil","category":6,"difficulty":3,"id":10,"question":"Which is the ...."},.....],
+    ,"total_questions":18}
+    
+```
 
+DELETE '/questions/<int:q_id>'
+- DELETE question using a question ID
+- Request Arguments: <q_id> the id of the question to delete
+- Return: An object with the key "id" and the value of the id of the question deleted
+    {"id": 4}
+```
+POST '/questions/add'
+- POST a new question, which will require the question and answer text
+- Request Arguments: None
+- Return: An object with the key "question" and the value of the question that have been added
+    {"question": {"answer":"Brazil","category":6,"difficulty":3,"id":10,"question":"Which is the ...."}}
+```   
+  
+POST '/questions'
+- a POST endpoint to get questions based on a search term
+- Request Arguments: None
+- Return: An object with the keys ["questions","total_questions","currentCategory"] with all the questions the  match the search term
+    {{"current_category":{"id":6,"type":"Sports"},
+    "questions":[{"answer":"Brazil","category":6,"difficulty":3,"id":10,"question":"Which is the ...."},.....],
+    ,"total_questions":18}
+``` 
+GET "/categories/<id>/questions"
+- a GET endpoint to get questions based on category
+- Request Arguments: id of the category 
+- Return: An object with the keys ["questions","total_questions","currentCategory"] with all the questions the  match the search term
+    {{"current_category":{"id":6,"type":"Sports"},
+    "questions":[{"answer":"Brazil","category":6,"difficulty":3,"id":10,"question":"Which is the ...."},.....],
+    ,"total_questions":18}
+``` 
+POST ""/quizzes""
+-  POST endpoint to get questions to play the quiz 
+        return a random questions within the given category, 
+  if provided, and that is not one of the previous questions
+
+- Request Arguments: None
+- Return: An object with the key "question" with a questions within the given category and that is not one of the previous questions
+    {"questions": {"answer":"Brazil","category":6,"difficulty":3,"id":10,"question":"Which is the ...."}}
+``` 
+
+
+  
 ## Testing
 To run the tests, run
 ```

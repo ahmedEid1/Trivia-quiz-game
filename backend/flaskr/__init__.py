@@ -88,7 +88,7 @@ def create_app(test_config=None):
         try:
             q = Question.query.get(q_id)
             q.delete()
-            return jsonify({"success": True})
+            return jsonify({"id": q_id})
         except:
             abort(400)
 
@@ -117,8 +117,7 @@ def create_app(test_config=None):
         questions = Question.query.order_by(Question.id).all()
         return jsonify(
             {
-                "questions": questions[-1].format(),
-                "success": True
+                "question": questions[-1].format(),
             }
         )
 
